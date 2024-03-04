@@ -1,3 +1,5 @@
+using ReverseProxyPoC;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,7 +8,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .AddTransformFactory<CustomerProfileTransformFactory>();
+    //.AddTransforms<CustomerProfileTransformProvider>();
 
 var app = builder.Build();
 
@@ -19,6 +23,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapReverseProxy();
+app.UseEndpoints(x =>x.mapcon.MapReverseProxy();
 
 app.Run();
