@@ -12,17 +12,20 @@ builder.Services.AddReverseProxy()
     .AddTransformFactory<CustomerProfileTransformFactory>();
     //.AddTransforms<CustomerProfileTransformProvider>();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
-
-app.UseEndpoints(x =>x.mapcon.MapReverseProxy();
+app.UseRouting();
+app.MapSwagger();
+app.UseSwaggerUI();
+app.MapGet("/ping", (HttpContext httpContext) =>
+{
+    httpContext.Response.StatusCode = StatusCodes.Status200OK;
+    return httpContext.Response.WriteAsync("pong");
+}).WithOpenApi().WithName("Ping");
+app.MapControllers();
+app.MapReverseProxy();
 
 app.Run();
